@@ -2,26 +2,26 @@ const Logger = require('../lib/logger.js');
 const logger = new Logger('OctoFarm-Scripts');
 const serverCommands = require("../lib/serverCommands");
 const Script = serverCommands.Script;
-const Alerts = require("../models/Alerts.js")
+const Alerts = require("../models/Alerts.js");
 
 class ScriptRunner{
     static async save(printer, trigger, message, scriptLocation){
-            let alert = {
-                active: true,
-                trigger: trigger,
-                message: message,
-                scriptLocation: scriptLocation,
-                printers: printer
-            }
-            let newAlert = await new Alerts(alert);
-            logger.info("Saving: " + trigger + " " + scriptLocation + " " + message)
-            newAlert.save().then(e=> {
-                logger.info("Saved: " + trigger + " " + scriptLocation + " " + message)
-            });
-            return "saved"
+        const alert = {
+            active: true,
+            trigger: trigger,
+            message: message,
+            scriptLocation: scriptLocation,
+            printers: printer
+        };
+        const newAlert = await new Alerts(alert);
+        logger.info("Saving: " + trigger + " " + scriptLocation + " " + message);
+        newAlert.save().then(e=> {
+            logger.info("Saved: " + trigger + " " + scriptLocation + " " + message);
+        });
+        return "saved";
     }
     static async edit(newAlert){
-        let old = await Alerts.findById(newAlert.id);
+        const old = await Alerts.findById(newAlert.id);
         old.active = newAlert.active;
         old.trigger = newAlert.trigger;
         old.scriptLocation = newAlert.scriptLocation;
@@ -30,11 +30,11 @@ class ScriptRunner{
         return "saved";
     }
     static async check(printer, trigger){
-        let currentAlerts = await Alerts.find({});
+        const currentAlerts = await Alerts.find({});
         for(let i = 0; i < currentAlerts.length; i++){
             if(currentAlerts[i].printer === printer._id || currentAlerts[i].printer.length === 0){
                 if(currentAlerts[i].trigger === trigger && currentAlerts[i].active){
-                    let newMessage = await ScriptRunner.convertMessage(printer, currentAlerts[i].message);
+                    const newMessage = await ScriptRunner.convertMessage(printer, currentAlerts[i].message);
 
                     ScriptRunner.fire(currentAlerts[i].scriptLocation, newMessage);
                 }
@@ -42,13 +42,13 @@ class ScriptRunner{
         }
     }
     static async test(scriptLocation, message){
-       logger.info("Testing: " + scriptLocation + " " + message)
-       let fire = await Script.fire(scriptLocation, JSON.stringify(message))
-       return fire;
+        logger.info("Testing: " + scriptLocation + " " + message);
+        const fire = await Script.fire(scriptLocation, JSON.stringify(message));
+        return fire;
     }
     static async fire(scriptLocation, message){
-        logger.info("Testing: " + scriptLocation + " " + message)
-        let fire = await Script.fire(scriptLocation, message)
+        logger.info("Testing: " + scriptLocation + " " + message);
+        const fire = await Script.fire(scriptLocation, message);
         return fire;
     }
     static async convertMessage(printer, message){
@@ -84,12 +84,13 @@ class ScriptRunner{
 
 
         if(message.includes("[ETA]")){
-            let dateComplete = "No Active Print"
+            let dateComplete = "No Active Print";
             if (typeof printer.progress !== "undefined" && printer.progress.printTimeLeft !== null) {
                 let currentDate = new Date();
                 currentDate = currentDate.getTime();
-                let futureDateString = new Date(currentDate + printer.progress.printTimeLeft * 1000).toDateString()
-                let futureTimeString = new Date(currentDate + printer.progress.printTimeLeft * 1000).toTimeString()
+                const newDate = new Date(currentDate + printer.progress.printTimeLeft * 1000);
+                const futureDateString = newDate.toDateString();
+                const futureTimeString = newDate.toTimeString();
                 futureTimeString = futureTimeString.substring(0, 8);
                 dateComplete = futureDateString + ": " + futureTimeString;
             }
@@ -111,14 +112,14 @@ class ScriptRunner{
             message = message.replace(/\[EstimatedTime\]/g, generateTime(job.estimatedPrintTime));
         }
         if(message.includes("[CurrentZ]")){
-            let current = ""
+            let current = "";
             if (
                 typeof printer.currentZ === "undefined" ||
                 printer.currentZ === null
             ) {
                 current = "No Current Z";
             }else{
-                current = printer.currentZ + "mm"
+                current = printer.currentZ + "mm";
             }
             message = message.replace(/\[CurrentZ\]/g, current);
         }
@@ -165,9 +166,9 @@ class ScriptRunner{
             }
         }
         if(message.includes("[Error!]")){
-            let errMess = "No Error"
+            let errMess = "No Error";
             if(printer.state.includes("Error")){
-                errMess = printer.stateDescription
+                errMess = printer.stateDescription;
             }
             message = message.replace(/\[Error!\]/g, errMess);
         }
@@ -181,13 +182,13 @@ const generateTime = function(seconds) {
     if (seconds === undefined || isNaN(seconds) || seconds === null) {
         string = "Done";
     } else {
-        let days = Math.floor(seconds / (3600 * 24));
+        const days = Math.floor(seconds / (3600 * 24));
 
         seconds -= days * 3600 * 24;
-        let hrs = Math.floor(seconds / 3600);
+        const hrs = Math.floor(seconds / 3600);
 
         seconds -= hrs * 3600;
-        let mnts = Math.floor(seconds / 60);
+        const mnts = Math.floor(seconds / 60);
 
         seconds -= mnts * 60;
         seconds = Math.floor(seconds);

@@ -1,11 +1,111 @@
+<% let loginRequired = defaultSettings.requireLogin ? "checked" : "" %>
+<% let registration = defaultSettings.registrationRequired ? "checked" : "" %>
+<%  %>
+
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
-    <div class="card card-body">
-      <h1 class="text-center mb-3"><i class="fas fa-database"></i> Create</h1>
+    <div class="card card-body text-center">
+      <h1 class="text-center mb-3"><%= defaultSettings.appName %> Setup</h1>
+      <p><img class="text-center" width="50%" src="images/logo.png" /></p>
       <%- include('./partials/messages') %>
-      <p>Your Mongo DatabaseURI has not been entered.</p>
-      <p>Please open up config/db.js and enter it between the quotes and restart the server.</p>
+      <p>Before we get started with adding printers <%= defaultSettings.appName %> need some more information from you about your enviroment. This will create a ".env" file in <%= defaultSettings.appName %>s root directory which will be read everytime <%= defaultSettings.appName %> starts. These options are also editable within the UI.</p>
+      <p>Please check over the form below and update any incorrect values...</p>
+      <form action="/submitEnvironment" method="POST">
+        <div class="input-group mb-3" title="Customise the name of your <%= defaultSettings.appName %> instance">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Application Name: </span>
+          </div>
+          <input type="text" class="form-control" name="appName" value="<%= defaultSettings.appName %>">
+        </div>
+        <div class="input-group mb-3" title="Enter your mongodb connection URI string...">
+          <div class="input-group-prepend">
+            <span class="input-group-text">mongodb://</span>
+          </div>
+          <input type="text" class="form-control" name="databaseURI" value="<%= defaultSettings.db.replace("mongodb://","") %>">
+        </div>
+        <p>
+          <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#advancedCollapse">
+            Advanced Settings &#9660;
+          </button>
+        </p>
+        <div class="collapse" id="advancedCollapse">
+        <div class="input-group mb-3" title="Enter the port you would like your server accessible from...">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Server Port:</span>
+          </div>
+          <input type="number" class="form-control" name="serverPort" step="1" value="<%= defaultSettings.serverPort %>">
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+              <div class="custom-control custom-checkbox mb-3" title="Do you want to require a login to your server?">
+                <input type="checkbox" class="custom-control-input" name="requireLogin" id="requireLogin" <%= loginRequired %>>
+                <label class="custom-control-label" for="requireLogin">Require a login</label>
+              </div>
+          </div>
+
+          <div class="col-sm-6">
+              <div class="custom-control custom-checkbox mb-3" title="Enable/Disable the ability for people to register new accounts...">
+                <input type="checkbox" class="custom-control-input" name="requireRegistration" id="requireRegistration" <%= registration %>>
+                <label class="custom-control-label" for="requireRegistration">Registration enabled</label>
+              </div>
+          </div>
+        </div>
+
+
+            <div class="input-group mb-3" title="This determines the rate at which OctoPrint sends information to <%= defaultSettings.appName %>...">
+              <div class="input-group-prepend">
+                <span class="input-group-text">OctoPrint's websocket Throttle:</span>
+              </div>
+              <input type="number" class="form-control" name="octoprintThrottle" value="<%= defaultSettings.webSocketThrottle %>" id="octoprintThrottle">
+              <div class="input-group-append">
+                <span class="input-group-text">Seconds</span>
+              </div>
+            </div>
+
+            <div class="input-group mb-3" title="This determines how long to wait for a connection response to OctoPrints API before timing out...">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><%= defaultSettings.appName %>s Initial API Timeout:</span>
+              </div>
+              <input type="number" class="form-control" name="apiTimeout" value="<%= defaultSettings.apiTimeout %>" id="apiTimeout" min="1" max="60">
+              <div class="input-group-append" >
+                <span class="input-group-text">Seconds</span>
+              </div>
+            </div>
+
+            <div class="input-group mb-3" title="This determines the secondary timeout time after the initial connection has failed...">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><%= defaultSettings.appName %>s Secondary API Timeout:</span>
+              </div>
+              <input type="number" class="form-control" name="secondApiTimeout" value="<%= defaultSettings.apiSecondaryTimeout %>" id="secondApiTimeout" min="5" max="60">
+              <div class="input-group-append">
+                <span class="input-group-text">Seconds</span>
+              </div>
+            </div>
+
+            <div class="input-group mb-3" title="This determines at what rate to attempt reconnecting to OctoPrints API... (only applicable to Offline printer rescans)">
+              <div class="input-group-prepend">
+                <span class="input-group-text">API Retry:</span>
+              </div>
+              <input type="number" class="form-control" name="apiRetry" value="<%= defaultSettings.apiRetry %>" id="apiRetry" min="30" max="60">
+              <div class="input-group-append">
+                <span class="input-group-text">Seconds</span>
+              </div>
+            </div>
+
+            <div class="input-group mb-3" title="This determines the rate at which <%= defaultSettings.appName %> will try to re-establish an websocket connection if lost...">
+              <div class="input-group-prepend">
+                <span class="input-group-text">WebSocket Retry:</span>
+              </div>
+              <input type="text" class="form-control" name="websocketRetry" value="<%= defaultSettings.webSocketRetry %>" id="websocketRetry" min="5" max="30">
+              <div class="input-group-append">
+                <span class="input-group-text">Seconds</span>
+              </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Submit Enviroment Settings</button>
       </form>
+
     </div>
   </div>
 </div>

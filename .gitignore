@@ -9,3 +9,4 @@ logs/
 .idea/jsLinters/
 .idea/libraries/
 views/images/historyCollection/
+.env

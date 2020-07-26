@@ -24,99 +24,102 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top p-1">
-    <a class="navbar-brand notyet" href="#">
-        <img src="favicon.ico" width="40px" class="pl-2" alt="favicon">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <% let noPrinters = "d-none" %>
-    <% if(typeof printerCount !== 'undefined' && printerCount > 0){ %>
-        <% noPrinters = "" %>
-    <% } %>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li id="menuDashboard">
-                <a title="Farm Dashboard" class="nav-link text-center" href="/dashboard">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-            <a title="Panel Layout Monitoring View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menuPanelView" href="/mon/panel"><i class="fas fa-columns"></i>
-                Panel</a>
-            </li>
-            <li class="nav-item">
-            <a title="List Layout Monitoring View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menuListView" href="/mon/list"><i class="fas fa-list"></i> List</a>
-            </li>
-            <li class="nav-item">
-
-            <a title="Camera Layout Monitoring View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menuCameraView" href="/mon/camera"><i class="fas fa-video"></i>
-                Camera</a>
-            </li>
-            <li class="nav-item">
-            <a title="Current Operations Monitoring Layout View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menucurrentOperationsView" href="/mon/currentOp"><i class="fas fa-star"></i>
-                Current Operations</a>
-            </li>
-            <% if(page.includes("Camera") || page.includes("List") || page.includes("Panel")){%>
-                <li class="nav-item">
-                    <div class="input-group p-0 m-0 pr-1  mx-auto">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="filterStates">Filter: </label>
-                        </div>
-                        <select class="custom-select" id="filterStates" data-jplist-control="select-filter" data-group="printers" data-name="view-filter" data-id="view-filter-select">
-                            <option selected="" href="#" value="all">All Printers</option>
-                            <option href="#" data-path=".Idle" value="idle">State: Idle</option>
-                            <option href="#" data-path=".Active" value="active">State: Active</option>
-                            <option href="#" data-path=".Complete" value="complete">State: Complete</option>
-                            <option href="#" data-path=".Disconnected" value="disconnected">State: Disconnected</option>
-
-                        </select>
-                    </div>
+<%if(page !== "Database Warning"){%>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top p-1">
+        <a class="navbar-brand notyet" href="#">
+            <img src="favicon.ico" width="40px" class="pl-2" alt="favicon">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <% let noPrinters = "d-none" %>
+        <% if(typeof printerCount !== 'undefined' && printerCount > 0){ %>
+            <% noPrinters = "" %>
+        <% } %>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li id="menuDashboard">
+                    <a title="Farm Dashboard" class="nav-link text-center" href="/dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <div class="input-group p-0 m-0 pr-1 mx-auto">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text" for="sortStates">Sort: </label>
-                        </div>
-                        <select class="custom-select " id="sortStates" data-jplist-control="select-sort" data-group="printers" data-name="view-sort" data-id="view-sort-select">
-                            <option href="#" selected="" data-path=".index" data-order="asc" data-type="number" value="index">Index</option>
-                            <option href="#" data-path=".percent" data-order="desc" data-type="number" value="percent">Percent</option>
-                            <option href="#" data-path=".time" data-order="asc" data-type="number" value="time">Time</option>
-
-                        </select>
-                    </div>
+                    <a title="Panel Layout Monitoring View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menuPanelView" href="/mon/panel"><i class="fas fa-columns"></i>
+                        Panel</a>
                 </li>
+                <li class="nav-item">
+                    <a title="List Layout Monitoring View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menuListView" href="/mon/list"><i class="fas fa-list"></i> List</a>
+                </li>
+                <li class="nav-item">
 
-            <% }%>
+                    <a title="Camera Layout Monitoring View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menuCameraView" href="/mon/camera"><i class="fas fa-video"></i>
+                        Camera</a>
+                </li>
+                <li class="nav-item">
+                    <a title="Current Operations Monitoring Layout View" class="nav-link text-light text-center btn-sm <%= noPrinters %>" id="menucurrentOperationsView" href="/mon/currentOp"><i class="fas fa-star"></i>
+                        Current Operations</a>
+                </li>
+                <% if(page.includes("Camera") || page.includes("List") || page.includes("Panel")){%>
+                    <li class="nav-item">
+                        <div class="input-group p-0 m-0 pr-1  mx-auto">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="filterStates">Filter: </label>
+                            </div>
+                            <select class="custom-select" id="filterStates" data-jplist-control="select-filter" data-group="printers" data-name="view-filter" data-id="view-filter-select">
+                                <option selected="" href="#" value="all">All Printers</option>
+                                <option href="#" data-path=".Idle" value="idle">State: Idle</option>
+                                <option href="#" data-path=".Active" value="active">State: Active</option>
+                                <option href="#" data-path=".Complete" value="complete">State: Complete</option>
+                                <option href="#" data-path=".Disconnected" value="disconnected">State: Disconnected</option>
 
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li id="menuPrinters">
-                <a title="Printer Setup"  class="nav-link text-center" href="/printers">
-                    <i class="fas fa-print"></i> Printers
-                </a>
-            </li>
-            <li class="nav-item">
-                <a   title="File Manager" class="d-none d-sm-none d-md-none d-lg-block nav-link" href="/filemanager" id="fileManagerBtn">
-                    <i class="fas fa-folder-open"></i> File Manager
-                </a>
-            </li>
-            <li class="nav-item">
-                <a title="Print History"  class="nav-link text-center" href="/history" id="historyBtn">
-                    <i class="fas fa-history"></i> History
-                </a>
-            </li>
-            <li class="nav-item">
-                <a  title="Filament Management"  class="nav-link text-center" href="/filament" id=""><i class="fas fa-toilet-paper"></i> Filament</a>
-            </li>
-            <li class="nav-item">
-                <a  title="Filament Management"  class="nav-link text-center" href="/system" id=""><i class="fas fa-cogs"></i> System</a>
-            </li>
-                </ul>
-    </div>
-</nav>
+                            </select>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="input-group p-0 m-0 pr-1 mx-auto">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="sortStates">Sort: </label>
+                            </div>
+                            <select class="custom-select " id="sortStates" data-jplist-control="select-sort" data-group="printers" data-name="view-sort" data-id="view-sort-select">
+                                <option href="#" selected="" data-path=".index" data-order="asc" data-type="number" value="index">Index</option>
+                                <option href="#" data-path=".percent" data-order="desc" data-type="number" value="percent">Percent</option>
+                                <option href="#" data-path=".time" data-order="asc" data-type="number" value="time">Time</option>
+
+                            </select>
+                        </div>
+                    </li>
+
+                <% }%>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li id="menuPrinters">
+                    <a title="Printer Setup"  class="nav-link text-center" href="/printers">
+                        <i class="fas fa-print"></i> Printers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a   title="File Manager" class="d-none d-sm-none d-md-none d-lg-block nav-link" href="/filemanager" id="fileManagerBtn">
+                        <i class="fas fa-folder-open"></i> File Manager
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a title="Print History"  class="nav-link text-center" href="/history" id="historyBtn">
+                        <i class="fas fa-history"></i> History
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a  title="Filament Management"  class="nav-link text-center" href="/filament" id=""><i class="fas fa-toilet-paper"></i> Filament</a>
+                </li>
+                <li class="nav-item">
+                    <a  title="Filament Management"  class="nav-link text-center" href="/system" id=""><i class="fas fa-cogs"></i> System</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+<%}%>
+
 <div>
     <%- body %>
     <div class="modal fade" id="printerManagerModal" tabindex="-1" role="dialog" aria-labelledby="printerManagerModalLabel" aria-hidden="true">

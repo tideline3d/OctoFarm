@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
     - Fixed Add Printer table not clearing correctly.
+    - Fixed issues with Filament Manager Plugin not correctly grabbing ID's of new spools/profiles
+    - File Manager errors with 0 files in statistics
     
 ### Removed
    
@@ -452,7 +454,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
     - Printer Management, see changed regarding dashboard. 
     - History and file statistics from Dashboard.
-    - Removed systemInfo from database, extra uneeded steps as data is all gathered live anyway. 
+    - Removed systemInformation from database, extra uneeded steps as data is all gathered live anyway. 
 
 ### Fixed
     - Long server starts due to second information grab. Now runs in the background to not effect start up.
