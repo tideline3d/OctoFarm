@@ -82,11 +82,44 @@ const databaseChecks = async function(){
     await logger.info("Starting System Information Collection...");
     const si = await SystemInfo.init();
     await logger.info(si);
-    const { FarmInfo } = require("./systemRunners/farmInformation.js");
-    const fi = await FarmInfo.init();
+    const Printers = require('./models/Printer.js');
+    const farmPrinters = await Printers.find({}, null, {
+        sort: { sortIndex: 1 }
+    });
+    await logger.info("Grabbed: " + farmPrinters.length + " printers for checking...");
+    //allowClientAccess();
+    const { FarmInformation } = require("./systemRunners/farmInformation.js");
+    const fi = await FarmInformation.init(farmPrinters);
 };
 const allowClientAccess = async function(){
     logger.info("Starting up server API");
+    // Routes
+    // app.use(express.static(`${__dirname}/views`));
+    //     try {
+    //         app.use("/", require("./routes/index", { page: "route" }));
+    //         app.use("/users", require("./routes/users", { page: "route" }));
+    //         app.use("/printers", require("./routes/printers", { page: "route" }));
+    //         app.use("/settings", require("./routes/settings", { page: "route" }));
+    //         // app.use(
+    //         //     "/printersInfo",
+    //         //     require("./routes/SSE-printersInfo", { page: "route" })
+    //         // );
+    //         // app.use(
+    //         //     "/dashboardInfo",
+    //         //     require("./routes/SSE-dashboard", { page: "route" })
+    //         // );
+    //         // app.use(
+    //         //     "/monitoringInfo",
+    //         //     require("./routes/SSE-monitoring", { page: "route" })
+    //         // );
+    //         app.use("/filament", require("./routes/filament", { page: "route" }));
+    //         app.use("/history", require("./routes/history", { page: "route" }));
+    //         app.use("/scripts", require("./routes/scripts", { page: "route" }));
+    //     } catch (e) {
+    //         await logger.error(e);
+    //         // eslint-disable-next-line no-console
+    //         console.log(e);
+    //     }
 };
 
 const initiatePrinterChecking = async function(){
@@ -104,7 +137,6 @@ const initiateBoot = async function(){
 };
 
 const setupDatabase = async function(){
-    console.log("awaiting user input....");
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
         logger.info(`HTTP server started...`);
@@ -124,7 +156,6 @@ const serverInitialisation = async () => {
     const doesDotEnvExist = await DotEnv.doesDotEnvExist();
     if(doesDotEnvExist){
         const verifyEnviroment = await DotEnv.validateDotEnv(process.env);
-        console.log(verifyEnviroment);
         if(verifyEnviroment.length <= 0){
             logger.info("Successfully loaded Enviroment Variables... continuing to boot the server...");
             initiateBoot();
@@ -182,37 +213,7 @@ serverInitialisation();
 //         await logger.error(err);
 //     }
 //
-//     // Routes
-//     app.use(express.static(`${__dirname}/views`));
-//     if (db === "") {
-//         app.use("/", require("./routes/index", { page: "route" }));
-//     } else {
-//         try {
-//             app.use("/", require("./routes/index", { page: "route" }));
-//             app.use("/users", require("./routes/users", { page: "route" }));
-//             app.use("/printers", require("./routes/printers", { page: "route" }));
-//             app.use("/settings", require("./routes/settings", { page: "route" }));
-//             app.use(
-//                 "/printersInfo",
-//                 require("./routes/SSE-printersInfo", { page: "route" })
-//             );
-//             app.use(
-//                 "/dashboardInfo",
-//                 require("./routes/SSE-dashboard", { page: "route" })
-//             );
-//             app.use(
-//                 "/monitoringInfo",
-//                 require("./routes/SSE-monitoring", { page: "route" })
-//             );
-//             app.use("/filament", require("./routes/filament", { page: "route" }));
-//             app.use("/history", require("./routes/history", { page: "route" }));
-//             app.use("/scripts", require("./routes/scripts", { page: "route" }));
-//         } catch (e) {
-//             await logger.error(e);
-//             // eslint-disable-next-line no-console
-//             console.log(e);
-//         }
-//     }
+//
 // };
 // // Mongo Connect
 //

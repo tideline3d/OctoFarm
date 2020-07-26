@@ -2,8 +2,8 @@ const si = require("systeminformation");
 const process = require("process");
 
 let systemInformation = {};
-console.log("HELLEHHEH");
-class SystemRunner {
+
+class SystemInfo {
     static returnInfo() {
         return systemInformation;
     }
@@ -61,5 +61,5 @@ class SystemRunner {
     }
 }
 module.exports = {
-    SystemRunner,
+    SystemInfo,
 };
