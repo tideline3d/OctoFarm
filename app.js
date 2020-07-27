@@ -15,6 +15,8 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 
+// System check tracking
+const { ServerChecks } = require("./systemRunners/serverChecks.js");
 
 // Settings
 const { DotEnv } = require("./systemRunners/dotEnvCheck.js");
@@ -68,6 +70,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 const databaseChecks = async function(){
     logger.info("Initiating Database Checks");
     await logger.info("Checking Server Settings...");
@@ -87,14 +90,15 @@ const databaseChecks = async function(){
         sort: { sortIndex: 1 }
     });
     await logger.info("Grabbed: " + farmPrinters.length + " printers for checking...");
-    //allowClientAccess();
-    const { FarmInformation } = require("./systemRunners/farmInformation.js");
-    const fi = await FarmInformation.init(farmPrinters);
+    // allowClientAccess();
+    // const { FarmInformation } = require("./systemRunners/farmInformation.js");
+    // const fi = await FarmInformation.init(farmPrinters);
 };
 const allowClientAccess = async function(){
     logger.info("Starting up server API");
     // Routes
-    // app.use(express.static(`${__dirname}/views`));
+    app.use(express.static(`${__dirname}/views`));
+    app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
     //     try {
     //         app.use("/", require("./routes/index", { page: "route" }));
     //         app.use("/users", require("./routes/users", { page: "route" }));
@@ -144,6 +148,7 @@ const setupDatabase = async function(){
         console.log(`Please access server on port: ${PORT} and continue the setup...`);
     });
     app.use(express.static(`${__dirname}/views`));
+    app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
     app.use("/", require("./routes/databaseSetup", {
         page: "route"
     }));
@@ -158,6 +163,7 @@ const serverInitialisation = async () => {
         const verifyEnviroment = await DotEnv.validateDotEnv(process.env);
         if(verifyEnviroment.length <= 0){
             logger.info("Successfully loaded Enviroment Variables... continuing to boot the server...");
+            ServerChecks.update("env","success");
             initiateBoot();
         }else{
             logger.error("Error in 'dotenv' file... halting system:", verifyEnviroment);

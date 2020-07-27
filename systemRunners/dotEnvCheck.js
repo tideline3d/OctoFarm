@@ -18,6 +18,7 @@ class DotEnv{
         }
     }
     static async writeDotEnvFile(actualSettings){
+
         try{
             const { appName, databaseURI, serverPort, requireLogin, requireRegistration } = actualSettings;
             //Formatting required to generate specific file correctly... do not alter whitespace

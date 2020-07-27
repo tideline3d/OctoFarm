@@ -1,4 +1,4 @@
-
+const FarmStatistics = require("../models/FarmStatistics.js");
 
 let farmStats = null;
 let heatMap = [

@@ -6,11 +6,6 @@ const { DotEnv } = require("../systemRunners/dotEnvCheck.js");
 const onlinePolling = {
     seconds: 0.5,
 };
-const server = {
-    port: process.env.SERVER_PORT,
-    registration: process.env.SERVER_REQUIRE_REGISTRATION,
-    loginRequired: process.env.SERVER_REQUIRE_LOGIN,
-};
 const timeout = {
     apiTimeout: 1000,
     apiRetryCutoff: 10000,
@@ -25,7 +20,6 @@ class ServerSettings {
         if (settings.length < 1) {
             const defaultSystemSettings = new ServerSettingsDB({
                 onlinePolling,
-                server,
                 timeout,
                 filamentManager,
             });
@@ -41,9 +35,6 @@ class ServerSettings {
         // Server settings exist, but need updating with new ones if they don't exists.
         if (typeof settings[0].timeout === "undefined") {
             settings[0].timeout = timeout;
-        }
-        if (typeof settings[0].server === "undefined") {
-            settings[0].server = server;
         }
         if (typeof settings[0].filamentManager === "undefined") {
             settings[0].filamentManager = filamentManager;

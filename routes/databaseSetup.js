@@ -22,6 +22,8 @@ const startDatabaseSetup = async function(){
         })
     );
     router.post("/submitEnvironment", async (req, res) => {
+        console.log("DATA PLEASE");
+        console.log(req.body);
         // eslint-disable-next-line prefer-const
         let { appName, databaseURI, serverPort, requireLogin, requireRegistration } = req.body;
         const errors = [];
