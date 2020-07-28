@@ -1,6 +1,6 @@
 <% let loginRequired = defaultSettings.requireLogin ? "checked" : "" %>
 <% let registration = defaultSettings.registrationRequired ? "checked" : "" %>
-<%  %>
+
 
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
@@ -15,13 +15,13 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Application Name: </span>
           </div>
-          <input type="text" class="form-control" id="appName" value="<%= defaultSettings.appName %>">
+          <input type="text" class="form-control" id="appName" name="appName" value="<%= defaultSettings.appName %>">
         </div>
         <div class="input-group mb-3" title="Enter your mongodb connection URI string...">
           <div class="input-group-prepend">
             <span class="input-group-text">mongodb://</span>
           </div>
-          <input type="text" class="form-control" id="databaseURI" value="<%= defaultSettings.db.replace("mongodb://","") %>">
+          <input type="text" class="form-control" id="databaseURI" name="databaseURI" value="<%= defaultSettings.db.replace("mongodb://","") %>">
         </div>
         <p>
           <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#advancedCollapse">
@@ -33,20 +33,20 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Server Port:</span>
           </div>
-          <input type="number" class="form-control" id="serverPort" step="1" value="<%= defaultSettings.serverPort %>">
+          <input type="number" class="form-control" id="serverPort" step="1" name="serverPort" value="<%= defaultSettings.serverPort %>">
         </div>
 
         <div class="row">
           <div class="col-sm-6">
               <div class="custom-control custom-checkbox mb-3" title="Do you want to require a login to your server?">
-                <input type="checkbox" class="custom-control-input" id="requireLogin" id="requireLogin" <%= loginRequired %>>
+                <input type="checkbox" class="custom-control-input" id="requireLogin" name="requireLogin" <%= loginRequired %>>
                 <label class="custom-control-label" for="requireLogin">Require a Login</label>
               </div>
           </div>
 
           <div class="col-sm-6">
               <div class="custom-control custom-checkbox mb-3" title="Enable/Disable the ability for people to register new accounts...">
-                <input type="checkbox" class="custom-control-input" id="requireRegistration" id="requireRegistration" <%= registration %>>
+                <input type="checkbox" class="custom-control-input" id="requireRegistration" name="requireRegistration" <%= registration %>>
                 <label class="custom-control-label" for="requireRegistration">Allow Registration</label>
               </div>
           </div>

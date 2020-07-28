@@ -72,6 +72,7 @@ app.use((req, res, next) => {
 
 
 const databaseChecks = async function(){
+    httpServer();
     logger.info("Initiating Database Checks");
     await logger.info("Checking Server Settings...");
     const { ServerSettings } = require("./settings/serverSettings.js");
@@ -90,23 +91,21 @@ const databaseChecks = async function(){
         sort: { sortIndex: 1 }
     });
     await logger.info("Grabbed: " + farmPrinters.length + " printers for checking...");
-    // allowClientAccess();
     // const { FarmInformation } = require("./systemRunners/farmInformation.js");
     // const fi = await FarmInformation.init(farmPrinters);
 };
-const allowClientAccess = async function(){
+const allowClientAccessLoadingScreen = async function(){
     logger.info("Starting up server API");
-    // Routes
-    app.use(express.static(`${__dirname}/views`));
     app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
+    // Routes
     //     try {
-    //         app.use("/", require("./routes/index", { page: "route" }));
+
     //         app.use("/users", require("./routes/users", { page: "route" }));
     //         app.use("/printers", require("./routes/printers", { page: "route" }));
     //         app.use("/settings", require("./routes/settings", { page: "route" }));
     //         // app.use(
     //         //     "/printersInfo",
-    //         //     require("./routes/SSE-printersInfo", { page: "route" })
+    //         //     requi("./routes/SSE-printersInfo", { page: "route" })
     //         // );
     //         // app.use(
     //         //     "/dashboardInfo",
@@ -135,12 +134,12 @@ const initiateBoot = async function(){
         .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => logger.info("Successfully connected to MongoDB database:", process.env.DATABASE_URI))
         .then(() => databaseChecks())
-        .then(() => allowClientAccess())
+        .then(() => allowClientAccessLoadingScreen())
         .then(() => initiatePrinterChecking())
         .catch((err) => logger.error(err));
 };
 
-const setupDatabase = async function(){
+const httpServer = async function(){
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
         logger.info(`HTTP server started...`);
@@ -148,10 +147,15 @@ const setupDatabase = async function(){
         console.log(`Please access server on port: ${PORT} and continue the setup...`);
     });
     app.use(express.static(`${__dirname}/views`));
-    app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
+};
+
+const setupDatabase = async function(){
+    httpServer();
     app.use("/", require("./routes/databaseSetup", {
         page: "route"
     }));
+
+    app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
     // Await user input to initiate the dotenv file...
 };
 // Server startup sequence and checks

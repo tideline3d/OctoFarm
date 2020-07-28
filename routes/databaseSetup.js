@@ -21,10 +21,10 @@ const startDatabaseSetup = async function(){
             defaultSettings: defaultSettings
         })
     );
-    router.post("/submitEnvironment", async (req, res) => {
-        console.log("DATA PLEASE");
-        console.log(req.body);
+    router.post("/submitEnvironment", async (req, res, next) => {
         // eslint-disable-next-line prefer-const
+        console.log("BODY",req.body);
+
         let { appName, databaseURI, serverPort, requireLogin, requireRegistration } = req.body;
         const errors = [];
 
@@ -74,7 +74,14 @@ const startDatabaseSetup = async function(){
             const writeToFile = await DotEnv.writeDotEnvFile(returnSettings);
             if(writeToFile){
                 const { SystemCommands } = require("../lib/serverCommands.js");
-                SystemCommands.rebootOctoFarm();
+                res.render("loading", {
+                    page: "Loading...",
+                    defaultSettings: returnSettings
+                });
+                setTimeout(() => {
+                    SystemCommands.rebootOctoFarm();
+                }, 10000);
+
             }else{
                 logger.error("Error writing to file... closing server, please check OctoFarm-Server.log and rectify...");
                 process.exit(1);

@@ -9,34 +9,27 @@ const drawModal = async function(){
 
 const preventSubmitReload = document.getElementById("dotEnvForm");
 if(preventSubmitReload){
-    preventSubmitReload.addEventListener("submit", async e => {
-        e.preventDefault();
-        const form = e.target;
-
-        form.submit(form);
-        // const data = {
-        //     appName: document.getElementById("appName").value,
-        //     databaseURI: document.getElementById("databaseURI").value,
-        //     serverPort: document.getElementById("serverPort").value,
-        //     requireLogin:document.getElementById("requireLogin").value,
-        //     requireRegistration: document.getElementById("requireRegistration").value,
-        // };
-        // const formData = new FormData();
-        // data.forEach(d => {
-        //     console.log(d);
-        // });
-        // formData.append("", undefined, undefined);
-        // console.log(formData);
-        // const postEnv = await fetch('/submitEnvironment', {
-        //     method: 'POST', // or 'PUT'
-        //     body: JSON.stringify(formData),
-        // });
-        // if(postEnv.status === 200){
-        //     UI.createAlert("success", "Successfully completed setup... Server will now reboot!");
-        // }else{
-        //     UI.createAlert("error", "Could not contact server to update... please check the logs");
-        // }
-    });
+    // preventSubmitReload.addEventListener("submit", async e => {
+    //     e.preventDefault();
+    //     const data = {
+    //         appName: document.getElementById("appName").value,
+    //         databaseURI: document.getElementById("databaseURI").value,
+    //         serverPort: document.getElementById("serverPort").value,
+    //         requireLogin:document.getElementById("requireLogin").value,
+    //         requireRegistration: document.getElementById("requireRegistration").value,
+    //     };
+    //     console.log(data);
+    //
+    //     const postEnv = await fetch('/submitEnvironment', {
+    //         method: 'POST', // or 'PUT'
+    //         body: JSON.stringify(data),
+    //     });
+    //     if(postEnv.status === 200){
+    //         UI.createAlert("success", "Successfully completed setup... Server will now reboot!");
+    //     }else{
+    //         UI.createAlert("error", "Could not contact server to update... please check the logs");
+    //     }
+    // });
 }
 
 const serverAliveCheck = async function(){
@@ -60,14 +53,24 @@ const serverAliveCheck = async function(){
                             text.innerHTML = "Connection Restored! <br> Reloading the page automatically in " + countDown + " seconds...";
                             countDown = countDown - 1;
                         }, 1000);
+                        console.log(location.href.includes("serverAlive"));
+                        console.log(location.host);
                         setTimeout(() => {
-                            location.reload("/");
+                            if(location.href.includes("serverAlive")){
+                                console.log(window.location.host);
+                                setTimeout(function(){window.location.href = window.location.host;},100);
+                                console.log("RELOAD");
+                                return false;
+                            }else{
+                                window.location.href = location.href;
+                                return false;
+                            }
                         },6000);
                     }
                 }
             }catch(e){
                 drawModal();
-                console.log(e);
+                console.error(e);
                 clearInterval(interval);
                 interval = false;
                 serverAliveCheck();

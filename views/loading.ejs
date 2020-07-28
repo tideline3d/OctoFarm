@@ -1,0 +1,15 @@
+
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body text-center">
+      <h1 class="text-center mb-3"><%= defaultSettings.appName %> Setup</h1>
+      <p><img class="text-center" width="50%" src="images/logo.png" /></p>
+      <%- include('./partials/messages') %>
+      <p>Before we get started with adding printers <%= defaultSettings.appName %> need some more information from you about your enviroment. This will create a ".env" file in <%= defaultSettings.appName %>s root directory which will be read everytime <%= defaultSettings.appName %> starts. These options are also editable within the UI.</p>
+      <p>Please check over the form below and update any incorrect values...</p>
+
+
+    </div>
+  </div>
+</div>
+<script src="/js/lib/modules/workers/serverAliveCheck.js" type="module"></script>
