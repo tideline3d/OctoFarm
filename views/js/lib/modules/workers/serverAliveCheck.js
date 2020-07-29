@@ -53,12 +53,12 @@ const serverAliveCheck = async function(){
                             text.innerHTML = "Connection Restored! <br> Reloading the page automatically in " + countDown + " seconds...";
                             countDown = countDown - 1;
                         }, 1000);
-                        console.log(location.href.includes("serverAlive"));
+                        console.log(location.href.includes("submitEnvironment"));
                         console.log(location.host);
                         setTimeout(() => {
-                            if(location.href.includes("serverAlive")){
-                                console.log(window.location.host);
+                            if(location.href.includes("submitEnvironment")){
                                 setTimeout(function(){window.location.href = window.location.host;},100);
+                                window.reload();
                                 console.log("RELOAD");
                                 return false;
                             }else{
