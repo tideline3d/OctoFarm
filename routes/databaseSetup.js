@@ -2,9 +2,22 @@ const express = require("express");
 
 const router = express.Router();
 
-const db = require("../config/db.js");
+const Logger = require("../lib/logger.js");
 
-const { DotEnv } = require("../systemRunners/dotEnvCheck.js");
+const logger = new Logger("OctoFarm-Server");
+
+let db = {
+    MongoURI: "localhost:27017/octofarm"
+};
+
+try{
+    db = require("../lib/config/db.js");
+}catch(e){
+    logger.info("Old config.js not found... ignoring", e);
+}
+
+
+const { DotEnv } = require("../systemRunners/system/dotEnvCheck.js");
 
 const startDatabaseSetup = async function(){
     const defaultSettings = {
@@ -80,10 +93,10 @@ const startDatabaseSetup = async function(){
                 });
                 setTimeout(() => {
                     SystemCommands.rebootOctoFarm();
-                }, 10000);
+                }, 5000);
 
             }else{
-                logger.error("Error writing to file... closing server, please check OctoFarm-Server.log and rectify...");
+                logger.error("Error writing to file... closing system, please check OctoFarm-Server.log and rectify...");
                 process.exit(1);
             }
         }

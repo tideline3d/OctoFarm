@@ -1,5 +1,5 @@
 // .env
-require('dotenv').config();
+require('dotenv').config({ path: './config/.env' });
 
 //Start up display and version information
 const pjson = require('./package.json');
@@ -16,10 +16,10 @@ const session = require("express-session");
 const passport = require("passport");
 
 // System check tracking
-const { ServerChecks } = require("./systemRunners/serverChecks.js");
+const { ServerChecks } = require("./systemRunners/system/serverChecks.js");
 
 // Settings
-const { DotEnv } = require("./systemRunners/dotEnvCheck.js");
+const { DotEnv } = require("./systemRunners/system/dotEnvCheck.js");
 const Logger = require("./lib/logger.js");
 
 const logger = new Logger("OctoFarm-Server");
@@ -31,10 +31,7 @@ const logger = new Logger("OctoFarm-Server");
 const app = express();
 
 // Passport Config
-require("./config/passport.js")(passport);
-
-// DB Config
-const db = require("./config/db.js").MongoURI;
+require("./lib/config/passport.js")(passport);
 
 // JSON
 app.use(express.json());
@@ -70,6 +67,15 @@ app.use((req, res, next) => {
     next();
 });
 
+const httpServer = async function(){
+    const PORT = process.env.PORT || 4000;
+    app.listen(PORT, () => {
+        logger.info(`HTTP server started...`);
+    });
+    app.use(express.static(`${__dirname}/views`));
+    app.use(`/images`,express.static(`${__dirname}/images`));
+};
+
 
 const databaseChecks = async function(){
     httpServer();
@@ -82,7 +88,7 @@ const databaseChecks = async function(){
     await logger.info("Checking Client Settings...");
     const cs = await ClientSettings.init();
     await logger.info(cs);
-    const { SystemInfo } = require("./systemRunners/systemInformation.js");
+    const { SystemInfo } = require("./systemRunners/system/systemInformation.js");
     await logger.info("Starting System Information Collection...");
     const si = await SystemInfo.init();
     await logger.info(si);
@@ -91,11 +97,13 @@ const databaseChecks = async function(){
         sort: { sortIndex: 1 }
     });
     await logger.info("Grabbed: " + farmPrinters.length + " printers for checking...");
+    await logger.info("Checking filament records...");
+
     // const { FarmInformation } = require("./systemRunners/farmInformation.js");
     // const fi = await FarmInformation.init(farmPrinters);
 };
 const allowClientAccessLoadingScreen = async function(){
-    logger.info("Starting up server API");
+    logger.info("Starting up system API");
     app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
     // Routes
     //     try {
@@ -131,7 +139,7 @@ const initiatePrinterChecking = async function(){
 
 const initiateBoot = async function(){
     mongoose
-        .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+        .connect(process.env.DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => logger.info("Successfully connected to MongoDB database:", process.env.DATABASE_URI))
         .then(() => databaseChecks())
         .then(() => allowClientAccessLoadingScreen())
@@ -139,15 +147,6 @@ const initiateBoot = async function(){
         .catch((err) => logger.error(err));
 };
 
-const httpServer = async function(){
-    const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => {
-        logger.info(`HTTP server started...`);
-        logger.info(`Please access server on port: ${PORT} and continue the setup...`);
-        console.log(`Please access server on port: ${PORT} and continue the setup...`);
-    });
-    app.use(express.static(`${__dirname}/views`));
-};
 
 const setupDatabase = async function(){
     httpServer();
@@ -156,6 +155,8 @@ const setupDatabase = async function(){
     }));
 
     app.use("/serverAlive", require("./routes/serverAliveCheck", { page: "route" }));
+    logger.info(`Please access server on port: ${process.env.PORT || 4000} and continue the setup...`);
+    console.log(`Please access server on port: ${process.env.PORT || 4000} and continue the setup...`);
     // Await user input to initiate the dotenv file...
 };
 // Server startup sequence and checks
@@ -166,7 +167,7 @@ const serverInitialisation = async () => {
     if(doesDotEnvExist){
         const verifyEnviroment = await DotEnv.validateDotEnv(process.env);
         if(verifyEnviroment.length <= 0){
-            logger.info("Successfully loaded Enviroment Variables... continuing to boot the server...");
+            logger.info("Successfully loaded Enviroment Variables... continuing to boot the system...");
             ServerChecks.update("env","success");
             initiateBoot();
         }else{
@@ -175,7 +176,7 @@ const serverInitialisation = async () => {
         }
 
     }else{
-        // Spin up the server on database request screen...
+        // Spin up the system on database request screen...
         setupDatabase();
     }
 };
@@ -193,7 +194,7 @@ serverInitialisation();
 // const serverStart = async () => {
 //     try {
 //         await logger.info("MongoDB Connected...");
-//         // Find server Settings
+//         // Find system Settings
 //         // Initialise farm information
 //         const farmInformation = await PrinterClean.initFarmInformation();
 //         await logger.info(farmInformation);
@@ -207,17 +208,17 @@ serverInitialisation();
 //         const { Runner } = runner;
 //         const rn = await Runner.init();
 //         await logger.info("Printer Runner has been initialised...", rn);
-//         const PORT = process.env.PORT || settings[0].server.port;
+//         const PORT = process.env.PORT || settings[0].system.port;
 //         await logger.info("Starting System Information Runner...");
 //         const system = require("./runners/systemInformation.js");
 //         const { SystemRunner } = system;
 //         const sr = await SystemRunner.init();
 //         await logger.info(sr);
 //         app.listen(PORT, () => {
-//             logger.info(`HTTP server started...`);
-//             logger.info(`You can now access your server on port: ${PORT}`);
+//             logger.info(`HTTP system started...`);
+//             logger.info(`You can now access your system on port: ${PORT}`);
 //             // eslint-disable-next-line no-console
-//             console.log(`You can now access your server on port: ${PORT}`);
+//             console.log(`You can now access your system on port: ${PORT}`);
 //         });
 //     } catch (err) {
 //         await logger.error(err);

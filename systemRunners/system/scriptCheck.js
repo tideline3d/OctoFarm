@@ -1,8 +1,8 @@
-const Logger = require('../lib/logger.js');
+const Logger = require('../../lib/logger.js');
 const logger = new Logger('OctoFarm-Scripts');
-const serverCommands = require("../lib/serverCommands");
+const serverCommands = require("../../lib/serverCommands");
 const Script = serverCommands.Script;
-const Alerts = require("../models/Alerts.js");
+const Alerts = require("../../models/Alerts.js");
 
 class ScriptRunner{
     static async save(printer, trigger, message, scriptLocation){

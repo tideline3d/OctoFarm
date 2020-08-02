@@ -1,9 +1,9 @@
 const fs = require('fs');
-const Logger = require('../lib/logger.js');
+const Logger = require('../../lib/logger.js');
 
 const logger = new Logger('OctoFarm-Server');
 
-const path = './.env';
+const path = './config/.env';
 
 class DotEnv{
     static async doesDotEnvExist(){
@@ -49,7 +49,7 @@ SERVER_REQUIRE_REGISTRATION=${requireRegistration}`;
         if(isNaN(SERVER_PORT)){
             errors.push({ msg: "Server port isn't a number..." });
         }
-
+        console.log(DATABASE_URI);
         if(!DATABASE_URI.includes("mongodb://")){
             errors.push({ msg: "MongoDB UI isn't formatted..."});
         }

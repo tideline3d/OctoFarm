@@ -1,6 +1,6 @@
 const ServerSettingsDB = require("../models/ServerSettings.js");
 
-const { DotEnv } = require("../systemRunners/dotEnvCheck.js");
+const { DotEnv } = require("../systemRunners/system/dotEnvCheck.js");
 
 // Default Settings
 const onlinePolling = {

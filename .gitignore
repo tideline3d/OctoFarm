@@ -1,5 +1,4 @@
 node_modules/
-config/db.js
 TODO.md
 logs/
 .clinic/
@@ -9,4 +8,5 @@ logs/
 .idea/jsLinters/
 .idea/libraries/
 views/images/historyCollection/
-.env
+images/*
+config/.env

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuthenticated } = require("../config/auth");
+const { ensureAuthenticated } = require("../lib/config/auth");
 const {parse, stringify} = require('flatted/cjs');
 //Global store of dashboard info... wonder if there's a cleaner way of doing all this?!
 let clientInformation = null;
@@ -9,7 +9,7 @@ const printerClean = require("../lib/dataFunctions/printerClean.js");
 const PrinterClean = printerClean.PrinterClean;
 
 let clientId = 0;
-let clients = {}; // <- Keep a map of attached clients
+const clients = {}; // <- Keep a map of attached clients
 let interval = false;
 
 // Called once for each new client. Note, this response is left open!
@@ -32,12 +32,12 @@ router.get("/get/", ensureAuthenticated, function(req, res) {
 
 if(interval === false){
     interval = setInterval(async function() {
-        let printersInformation = await PrinterClean.returnPrintersInformation();
-        let printerControlList = await PrinterClean.returnPrinterControlList();
-        let infoDrop = {
+        const printersInformation = await PrinterClean.returnPrintersInformation();
+        const printerControlList = await PrinterClean.returnPrinterControlList();
+        const infoDrop = {
             printersInformation: printersInformation,
             printerControlList: printerControlList
-        }
+        };
         clientInformation = await stringify(infoDrop);
         for (clientId in clients) {
             for (clientId in clients) {

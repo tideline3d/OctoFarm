@@ -1,14 +1,14 @@
 const express = require("express");
 
 const router = express.Router();
-const { ensureAuthenticated } = require("../config/auth");
+const { ensureAuthenticated } = require("../lib/config/auth");
 const ServerSettingsDB = require("../models/ServerSettings.js");
 const ClientSettingsDB = require("../models/ClientSettings.js");
-const runner = require("../runners/state.js");
+const runner = require("../systemRunners/printers/state.js");
 
 const { Runner } = runner;
 
-const systemInfo = require("../systemRunners/systemInformation.js");
+const systemInfo = require("../systemRunners/system/systemInformation.js");
 
 const SystemInfo = systemInfo.SystemRunner;
 
@@ -23,16 +23,16 @@ const { SystemCommands } = serverCommands;
 
 module.exports = router;
 
-router.get("/server/get/logs", ensureAuthenticated, async (req, res) => {
+router.get("/system/get/logs", ensureAuthenticated, async (req, res) => {
     const serverLogs = await Logs.grabLogs();
     res.send(serverLogs);
 });
-router.get("/server/download/logs/:name", ensureAuthenticated, (req, res) => {
+router.get("/system/download/logs/:name", ensureAuthenticated, (req, res) => {
     const download = req.params.name;
     const file = `./logs/${download}`;
     res.download(file, download); // Set disposition and send it.
 });
-router.get("/server/restart", ensureAuthenticated, (req, res) => {
+router.get("/system/restart", ensureAuthenticated, (req, res) => {
     SystemCommands.rebootOctoFarm();
 });
 router.get("/client/get", ensureAuthenticated, (req, res) => {
@@ -75,12 +75,12 @@ router.post("/client/update", ensureAuthenticated, (req, res) => {
     });
 });
 
-router.get("/server/get", ensureAuthenticated, (req, res) => {
+router.get("/system/get", ensureAuthenticated, (req, res) => {
     ServerSettingsDB.find({}).then((checked) => {
         res.send(checked[0]);
     });
 });
-router.post("/server/update", ensureAuthenticated, (req, res) => {
+router.post("/system/update", ensureAuthenticated, (req, res) => {
     ServerSettingsDB.find({}).then(async (checked) => {
         checked[0].onlinePolling = req.body.onlinePolling;
         Runner.updatePoll();

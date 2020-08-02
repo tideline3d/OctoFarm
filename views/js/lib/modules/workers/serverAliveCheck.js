@@ -27,7 +27,7 @@ if(preventSubmitReload){
     //     if(postEnv.status === 200){
     //         UI.createAlert("success", "Successfully completed setup... Server will now reboot!");
     //     }else{
-    //         UI.createAlert("error", "Could not contact server to update... please check the logs");
+    //         UI.createAlert("error", "Could not contact system to update... please check the logs");
     //     }
     // });
 }
@@ -53,16 +53,13 @@ const serverAliveCheck = async function(){
                             text.innerHTML = "Connection Restored! <br> Reloading the page automatically in " + countDown + " seconds...";
                             countDown = countDown - 1;
                         }, 1000);
-                        console.log(location.href.includes("submitEnvironment"));
-                        console.log(location.host);
                         setTimeout(() => {
                             if(location.href.includes("submitEnvironment")){
-                                setTimeout(function(){window.location.href = window.location.host;},100);
-                                window.reload();
-                                console.log("RELOAD");
+                                const hostName = window.location.protocol +"//"+ window.location.host+"";
+                                window.location.replace(hostName);
                                 return false;
                             }else{
-                                window.location.href = location.href;
+                                window.location.reload();
                                 return false;
                             }
                         },6000);

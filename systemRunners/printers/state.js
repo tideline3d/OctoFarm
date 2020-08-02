@@ -1,33 +1,33 @@
-const Profiles = require('../models/Profiles.js');
-const historyCollection = require('./history.js');
+const Profiles = require('../../models/Profiles.js');
+const historyCollection = require('../history/history.js');
 
 const { HistoryCollection } = historyCollection;
-const serverSettings = require('../settings/serverSettings.js');
+const serverSettings = require('../../settings/serverSettings.js');
 
 const { ServerSettings } = serverSettings;
 const fetch = require('node-fetch');
 const _ = require('lodash');
 const WebSocket = require('ws');
-const Printers = require('../models/Printer.js');
-const Filament = require('../models/Filament.js');
-const Logger = require('../lib/logger.js');
+const Printers = require('../../models/Printer.js');
+const Filament = require('../../models/Filament.js');
+const Logger = require('../../lib/logger.js');
 
 const logger = new Logger('OctoFarm-State');
-const script = require('./scriptCheck.js');
+const script = require('../system/scriptCheck.js');
 
 const { ScriptRunner } = script;
 const EventEmitter = require('events');
-const printerClean = require('../lib/dataFunctions/printerClean.js');
+const printerClean = require('../../lib/dataFunctions/printerClean.js');
 
 const { PrinterClean } = printerClean;
-const jobClean = require('../lib/dataFunctions/jobClean.js');
+const jobClean = require('../../lib/dataFunctions/jobClean.js');
 
 const { JobClean } = jobClean;
-const fileClean = require('../lib/dataFunctions/fileClean.js');
+const fileClean = require('../../lib/dataFunctions/fileClean.js');
 
 const { FileClean } = fileClean;
 
-const filamentClean = require('../lib/dataFunctions/filamentClean.js');
+const filamentClean = require('../../lib/dataFunctions/filamentClean.js');
 
 const { FilamentClean } = filamentClean;
 
@@ -1206,7 +1206,7 @@ class Runner {
 
     static async updatePoll () {
         for (let i = 0; i < farmPrinters.length; i++) {
-            // Update the server
+            // Update the system
             const server = await ServerSettings.check();
             systemSettings = server[0];
             const Polling = systemSettings.onlinePolling;
