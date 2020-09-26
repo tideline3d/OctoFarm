@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [v1.1.6]
 
 ### Added
+    - Added support for influxdb export.
+        -   Currently only works with versions 1.x of InfluxDB.
     
 ### Changed
     - Added additional CSS classes to buttons for theming. Applies to actions buttons only, status colours the same. 

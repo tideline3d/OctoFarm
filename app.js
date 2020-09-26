@@ -13,6 +13,8 @@ const logger = new Logger("OctoFarm-Server");
 const printerClean = require("./lib/dataFunctions/printerClean.js");
 
 const { PrinterClean } = printerClean;
+const { databaseSetup } = require("./lib/influxdb.js");
+
 
 // Server Port
 const app = express();
@@ -94,6 +96,8 @@ const serverStart = async () => {
         const { SystemRunner } = system;
         const sr = await SystemRunner.init();
         await logger.info(sr);
+        const setupInfluxDB = await databaseSetup();
+        console.log(setupInfluxDB);
         app.listen(PORT, () => {
             logger.info(`HTTP server started...`);
             logger.info(`You can now access your server on port: ${PORT}`);

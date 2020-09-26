@@ -40,6 +40,7 @@
     "fetch-base64": "^2.1.2",
     "flatted": "^2.0.2",
     "gulp-postcss": "^8.0.0",
+    "influx": "^5.6.3",
     "lodash": "^4.17.20",
     "mongoose": "^5.10.3",
     "multer": "^1.4.2",
@@ -118,7 +119,11 @@
   },
   "nodemonConfig": {
     "verbose": false,
-    "ignore": ["views/assets/*", "logs/*", "src/*"],
+    "ignore": [
+      "views/assets/*",
+      "logs/*",
+      "src/*"
+    ],
     "delay": "2500"
   }
 }

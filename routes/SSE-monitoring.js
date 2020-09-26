@@ -11,6 +11,7 @@ const PrinterClean = printerClean.PrinterClean;
 const settingsClean = require("../lib/dataFunctions/settingsClean.js");
 const SettingsClean = settingsClean.SettingsClean;
 const { getSorting, getFilter } = require("../lib/clientSorting.js");
+const { writePoints } = require("../lib/influxdb.js");
 
 let clientId = 0;
 const clients = {}; // <- Keep a map of attached clients
@@ -43,6 +44,11 @@ if(interval === false){
 
         const printersInformation = await PrinterClean.returnPrintersInformation();
 
+        if(true){
+            // eslint-disable-next-line no-use-before-define
+            sendToInflux(printersInformation);
+        }
+
         const printerControlList = await PrinterClean.returnPrinterControlList();
         const clientSettings = await SettingsClean.returnClientSettings();
         const infoDrop = {
@@ -58,6 +64,51 @@ if(interval === false){
             }
         }
     }, 500);
+}
+function sendToInflux(printersInformation){
+    //console.log(printersInformation[0]);
+    printersInformation.forEach(printer => {
+        const date = Date.now();
+        let group = null;
+        if(printer.group === ''){
+            group = null;
+        }
+        const tags = {
+            printerName: printer.printerName,
+            group: group,
+            url: printer.printerURL,
+            state: printer.printerState.state
+        };
+        const printerStatus = {
+            state: printer.printerState.state,
+            stateCategory: printer.printerState.colour.category,
+            timestamp: date
+        };
+        writePoints(tags, "PrinterState", printerStatus);
+        if(typeof printer.tools !== 'undefined' && printer.tools !== null && printer.tools[0] !== null){
+            const currentTemps = {};
+            for (const key in printer.tools[0]) {
+                if (printer.tools[0].hasOwnProperty(key)) {
+                    if(key !== "time"){
+                        if(printer.tools[0][key].actual !== null){
+                            currentTemps[key+"_actual"] = printer.tools[0][key].actual;
+                        }else{
+                            currentTemps[key+"_actual"] = 0;
+                        }
+                        if(printer.tools[0][key].target !== null){
+                            currentTemps[key+"_target"] = printer.tools[0][key].target;
+                        }else{
+                            currentTemps[key+"_target"] = 0;
+                        }
+
+
+                    }
+                }
+            }
+            currentTemps.timestamp = date;
+            writePoints(tags, "PrinterTemps", currentTemps);
+        }
+    });
 }
 
 
