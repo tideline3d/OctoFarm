@@ -38,3 +38,4 @@ artifacts:
     - settings/*
     - src/*
     - views/*
+    - appspec.yml
