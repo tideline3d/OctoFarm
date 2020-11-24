@@ -112,7 +112,7 @@
   },
   "engineStrict": true,
   "engines": {
-    "node": "v12.19.0",
+    "node": "12.19.0",
     "npm": ">= 6.0.0"
   },
   "config": {
