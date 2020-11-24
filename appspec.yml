@@ -19,11 +19,3 @@ hooks:
     - location: npm start app.js
       timeout: 120
       runas: ec2-user
-  ApplicationStop:
-    - location: npm stop
-      timeout: 120
-      runas: ec2-user
-  ValidateService:
-    - location: validate.sh
-      timeout: 60
-      runas: ec2-user
