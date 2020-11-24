@@ -25,17 +25,4 @@ phases:
 # ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
 artifacts:
   files:
-    - app.js
-    - index.html
-    - package.json
-    - node_modules/*
-    - config/*
-    - images/*
-    - lib/*
-    - node_modules/*
-    - routes/*
-    - runners/*
-    - settings/*
-    - src/*
-    - views/*
-    - appspec.yml
+    - '**/*' #copy all build files to S3 location
